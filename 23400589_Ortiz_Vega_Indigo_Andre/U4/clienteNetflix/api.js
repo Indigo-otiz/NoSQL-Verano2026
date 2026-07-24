@@ -1,5 +1,6 @@
 //const API_URL = "http://localhost:3000";
 const API_URL = "https://api-netflix-one.vercel.app";
+// URL de frontend: https://cliente-netflix-nu.vercel.app
 
 //Películas
 // Obtener películas
