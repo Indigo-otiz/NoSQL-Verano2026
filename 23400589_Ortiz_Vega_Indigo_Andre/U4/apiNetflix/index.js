@@ -65,7 +65,7 @@ app.get("/", (req, res) => {
 // Get
 app.get("/peliculas", async (req, res) => {
     try {
-        const peliculas = await Pelicula.find().sort({ _id: -1 }).limit(10);
+        const peliculas = await Pelicula.find();
         res.json(peliculas);
     } catch (error) {
         res.status(500).json({
@@ -189,7 +189,7 @@ app.delete("/peliculas/:id", async (req,res) => {
 // Get
 app.get("/series", async (req, res) => {
     try{
-        const series = await Serie.find().limit(10);
+        const series = await Serie.find();
         res.json(series);
     } catch (error) {
         res.status(500).json({
