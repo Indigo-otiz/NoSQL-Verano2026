@@ -26,6 +26,7 @@ const peliculaSchema = new mongoose.Schema(
         duracion: { type: Number, required: true, min: 1 },
         idioma: { type: String, required: true, trim: true },
         calificacion: { type: Number, required: true, min: 0, max:10 },
+        portada: { type: String, required: false, trim: true },
         nc: { type: String, required: true, trim: true, minlength: 8 }
     },
     {
@@ -42,6 +43,7 @@ const serieSchema = new mongoose.Schema(
         episodios: { type: Number, required: true, min: 1},
         idioma: { type: String, required: true, trim: true },
         calificacion: { type: Number, required: true, min: 0, max:10 },
+        portada: { type: String, required: false, trim: true },
         nc: { type: String, required: true, trim: true, minlength: 8 }
     },
     {
@@ -63,7 +65,7 @@ app.get("/", (req, res) => {
 // Get
 app.get("/peliculas", async (req, res) => {
     try {
-        const peliculas = await Pelicula.find().limit(10);
+        const peliculas = await Pelicula.find().sort({ _id: -1 }).limit(10);
         res.json(peliculas);
     } catch (error) {
         res.status(500).json({
@@ -98,9 +100,9 @@ app.get("/peliculas/:id", async (req, res) => {
 // Post
 app.post("/peliculas", async (req,res) => {
     try{
-        const { titulo, genero, año, duracion, idioma, calificacion, nc } = req.body;
+        const { titulo, genero, año, duracion, idioma, calificacion, nc, portada } = req.body;
 
-        if (!titulo || !genero || !año || !duracion || !idioma || !calificacion || !nc) {
+        if (!titulo || !genero || !año || !duracion || !idioma || !calificacion || !nc ) {
             return res.status(400).json({
                 mensaje: "Faltan datos de la película"
             })
@@ -128,7 +130,7 @@ app.post("/peliculas", async (req,res) => {
 app.put("/peliculas/:id", async (req,res) => {
     try{
         const id = req.params.id;
-        const { titulo, genero, año, duracion, idioma, calificacion, nc } = req.body;
+        const { titulo, genero, año, duracion, idioma, calificacion, nc, portada } = req.body;
 
         if (!titulo || !genero || !año || !duracion || !idioma || !calificacion || !nc) {
             return res.status(400).json({
@@ -222,7 +224,7 @@ app.get("/series/:id", async (req, res) => {
 // Post
 app.post("/series", async (req,res) => {
     try{
-        const { titulo, genero, año, temporadas, episodios, idioma, calificacion, nc } = req.body;
+        const { titulo, genero, año, temporadas, episodios, idioma, calificacion, nc, portada } = req.body;
 
         if (!titulo || !genero || !año || !temporadas || !episodios || !idioma || !calificacion || !nc) {
             return res.status(400).json({
@@ -252,7 +254,7 @@ app.post("/series", async (req,res) => {
 app.put("/series/:id", async (req,res) => {
     try{
         const id = req.params.id;
-        const { titulo, genero, año, temporadas, episodios, idioma, calificacion, nc } = req.body;
+        const { titulo, genero, año, temporadas, episodios, idioma, calificacion, nc, portada } = req.body;
 
         if (!titulo || !genero || !año || !temporadas || !episodios || !idioma || !calificacion || !nc) {
             return res.status(400).json({

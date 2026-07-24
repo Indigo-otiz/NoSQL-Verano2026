@@ -1,118 +1,324 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <title>Consumir API REST</title>
-
     <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            width: 600px;
-            margin: 30px auto;
-            background-color: #b1d6e2;
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
         }
 
-        input {
-            display: block;
-            width: 100%;
-            padding: 8px;
-            margin: 10px 0;
+        body{
+            font-family: "Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+            background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+            color:white;
+            min-height:100vh;
+            padding:40px 25px;
         }
 
-        button {
-            padding: 10px 15px;
-            margin: 10px 0;
-            cursor: pointer;
+        /* Contenedor principal */
+        body{
+            max-width:1300px;
+            margin:auto;
         }
 
-        ul {
-            margin-top: 20px;
+        /*------------------------------------------------*/
+        /* TITULO */
+        /*------------------------------------------------*/
+
+        h2{
+            text-align:center;
+            margin:25px 0;
+            font-size:30px;
+            font-weight:600;
+            letter-spacing:.5px;
         }
 
-        li {
-            margin: 8px 0;
+        /*------------------------------------------------*/
+        /* TABS SUPERIORES */
+        /*------------------------------------------------*/
+
+        .toggle-botones{
+            display:flex;
+            justify-content:center;
+            gap:15px;
+            margin-bottom:35px;
+        }
+
+        .toggle-botones button{
+            background:rgba(255,255,255,.08);
+            color:white;
+            border:1px solid rgba(255,255,255,.18);
+            backdrop-filter:blur(12px);
+            padding:14px 35px;
+            border-radius:50px;
+            font-size:16px;
+            transition:.3s;
+            cursor:pointer;
+        }
+
+        .toggle-botones button:hover{
+            transform:translateY(-3px);
+            background:rgba(255,255,255,.15);
+        }
+
+        .toggle-botones button.activo{
+            background:#4CAF50;
+            border-color:#4CAF50;
+            box-shadow:0 0 18px rgba(76,175,80,.45);
+        }
+
+        /*------------------------------------------------*/
+        /* FORMULARIO */
+        /*------------------------------------------------*/
+
+        form{
+            width:100%;
+            max-width:900px;
+            margin:auto;
+            padding:35px;
+            background:rgba(255,255,255,.10);
+            backdrop-filter:blur(18px);
+            border:1px solid rgba(255,255,255,.15);
+            border-radius:22px;
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:18px;
+            box-shadow:0 12px 35px rgba(0,0,0,.35);
+        }
+
+        /* Los grupos ocupan todo el ancho */
+
+        #grupoPelicula,
+        #grupoSerie{
+            grid-column:span 2;
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:18px;
+        }
+
+        input{
+            width:100%;
+            padding:15px 18px;
+            border:none;
+            outline:none;
+            border-radius:12px;
+            font-size:15px;
+            color:white;
+            background:rgba(255,255,255,.08);
+            border:1px solid rgba(255,255,255,.12);
+            transition:.25s;
+        }
+
+        input::placeholder{
+            color:rgba(255,255,255,.65);
+        }
+
+        input:focus{
+            border-color:#4CAF50;
+            box-shadow:0 0 0 3px rgba(76,175,80,.20);
+        }
+
+        /*------------------------------------------------*/
+        /* BOTONES */
+        /*------------------------------------------------*/
+
+        form > div{
+            grid-column:span 2;
+            display:flex;
+            justify-content:center;
+            flex-wrap:wrap;
+            gap:15px;
+            margin-top:10px;
+        }
+
+        button{
+            border:none;
+            cursor:pointer;
+            border-radius:12px;
+            padding:14px 22px;
+            color:white;
+            font-size:15px;
+            font-weight:600;
+            transition:.25s;
+        }
+
+        button:hover{
+            transform:translateY(-2px);
+        }
+
+        #btnGuardar{
+            background:#4CAF50;
+        }
+
+        #btnGuardar:hover{
+            box-shadow:0 0 18px rgba(76,175,80,.45);
+        }
+
+        #btnLimpiar{
+            background:#6c757d;
+        }
+
+        #btnEliminar{
+            background:#f44336;
+        }
+
+        #btnConsultar{
+            display:block;
+            margin:35px auto;
+            padding:16px 30px;
+            background:#4CAF50;
+            font-size:16px;
+            box-shadow:0 8px 20px rgba(76,175,80,.25);
+        }
+
+        /*------------------------------------------------*/
+        /* LINEA */
+        /*------------------------------------------------*/
+
+        hr{
+            margin:45px 0;
+            border:none;
+            border-top:1px solid rgba(255,255,255,.12);
+        }
+
+        /*------------------------------------------------*/
+        /* CATALOGO */
+        /*------------------------------------------------*/
+
+        #listaCatalogo{
+            list-style:none;
+            display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+            gap:28px;
+            margin-top:20px;
+        }
+
+        /*------------------------------------------------*/
+        /* TARJETAS */
+        /*------------------------------------------------*/
+
+        #listaCatalogo li{
+            background:rgba(255,255,255,.10);
+            backdrop-filter:blur(14px);
+            border:1px solid rgba(255,255,255,.15);
+            border-radius:20px;
+            overflow:hidden;
+            transition:.35s;
+            cursor:pointer;
+            box-shadow:0 8px 22px rgba(0,0,0,.25);
+        }
+
+        #listaCatalogo li:hover{
+            transform:translateY(-8px) scale(1.02);
+            box-shadow:0 15px 35px rgba(0,0,0,.45);
+        }
+
+        .img-portada{
+            width:100%;
+            height:320px;
+            object-fit:cover;
+            transition:.35s;
+        }
+
+        #listaCatalogo li:hover .img-portada{
+            transform:scale(1.05);
+        }
+
+        .info-item{
+            padding:18px;
+            text-align:left;
+        }
+
+        .titulo-item{
+            font-size:18px;
+            margin-bottom:10px;
+            font-weight:700;
+            line-height:1.3;
+        }
+
+        .meta-item{
+            font-size:14px;
+            color:rgba(255,255,255,.75);
+            margin-bottom:6px;
+        }
+
+        .calificacion-item{
+            margin-top:12px;
+            color:#FFD54F;
+            font-weight:bold;
+            font-size:15px;
+        }
+
+        /*------------------------------------------------*/
+        /* RESPONSIVE */
+        /*------------------------------------------------*/
+
+        @media(max-width:850px){
+            form{
+                grid-template-columns:1fr;
+            }
+
+            #grupoPelicula,
+            #grupoSerie{
+                grid-column:span 1;
+                grid-template-columns:1fr;
+            }
+
+            form > div{
+                grid-column:span 1;
+            }
+
         }
     </style>
 </head>
-
 <body>
 
-    <h1>Películas</h1>
+    <div class="toggle-botones">
+        <button id="btnVerPeliculas" class="activo">🎬 Películas</button>
+        <button id="btnVerSeries">📺 Series</button>
+    </div>
 
-    <h2>Registrar película</h2>
+    <h2 id="tituloFormulario">Registrar Película</h2>
 
     <form id="formulario">
+        <input type="hidden" id="idElemento">
 
-        <input
-            type="text"
-            id="titulo"
-            placeholder="Título"
-            required
-        >
+        <input type="text" id="titulo" placeholder="Título" required>
+        <input type="text" id="genero" placeholder="Género" required>
+        <input type="number" id="año" placeholder="Año" required>
+        
+        <div id="grupoPelicula">
+            <input type="number" id="duracion" placeholder="Duración (min)">
+        </div>
 
-        <input
-            type="text"
-            id="genero"
-            placeholder="Género"
-            required
-        >
+        <div id="grupoSerie" style="display: none;">
+            <input type="number" id="temporadas" placeholder="Temporadas">
+            <input type="number" id="episodios" placeholder="Episodios">
+        </div>
 
-        <input
-            type="number"
-            id="año"
-            placeholder="Año"
-            required
-        >
+        <input type="text" id="idioma" placeholder="Idioma" required>
+        <input type="number" id="calificacion" placeholder="Calificación" min="0" max="10" step="0.1" required>
+        <input type="url" id="portada" placeholder="URL de la imagen de portada">
+        <input type="text" id="nc" placeholder="Número de control" required>
 
-        <input
-            type="number"
-            id="duracion"
-            placeholder="Duración"
-            required
-        >
-
-        <input
-            type="text"
-            id="idioma"
-            placeholder="Idioma"
-            required
-        >
-
-        <input
-            type="number"
-            id="calificacion"
-            placeholder="Calificación"
-            min="0"
-            max="10"
-            step="0.1"
-            required
-        >
-
-        <input
-            type="text"
-            id="nc"
-            placeholder="Número de control"
-            required
-        >
-
-        <button type="submit">
-            Guardar película
-        </button>
-
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" id="btnGuardar">Guardar</button>
+            <button type="button" id="btnLimpiar" style="background-color: #6c757d;">Limpiar</button>
+            <button type="button" id="btnEliminar" style="display: none; background-color: #f44336;">Eliminar</button>
+        </div>
     </form>
 
     <hr>
 
-    <button id="btnConsultar">
-        Consultar películas
-    </button>
+    <button id="btnConsultar">Consultar Catálogo</button>
 
-    <ul id="listaPeliculas"></ul>
+    <ul id="listaCatalogo"></ul>
 
     <script src="api.js"></script>
     <script src="app.js"></script>
 
 </body>
-
 </html>
